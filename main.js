@@ -6,16 +6,15 @@ var ipcMain = require('electron').ipcMain;
 var AppConfig = require('./config.js');
 var config = AppConfig.store.all;
 
-var mb = menubar(
-    Object.assign(AppConfig.store.defaults)
-);
+var mb = menubar(Object.assign(AppConfig.store.defaults));
 
 var accelerators = [
-    'Cmd+Ctrl+Left',
-    'Cmd+Ctrl+Right',
-    'Cmd+Ctrl+j',
-    'Cmd+Ctrl+l',
-    'Cmd+Ctrl+y'
+    { accelerator: config.hotkeys.skipShortBwd, unregisterOnHide: true },
+    { accelerator: config.hotkeys.skipShortFwd, unregisterOnHide: true },
+    { accelerator: config.hotkeys.skipLongFwd, unregisterOnHide: true },
+    { accelerator: config.hotkeys.skipLongBwd, unregisterOnHide: true },
+    { accelerator: config.hotkeys.toggle, unregisterOnHide: false },
+    { accelerator: config.hotkeys.playPause, unregisterOnHide: true },
 ];
 
 var defaultMenu = [
@@ -25,37 +24,37 @@ var defaultMenu = [
             {
                 label: 'Undo',
                 accelerator: 'CmdOrCtrl+Z',
-                role: 'undo'
+                role: 'undo',
             },
             {
                 label: 'Redo',
                 accelerator: 'Shift+CmdOrCtrl+Z',
-                role: 'redo'
+                role: 'redo',
             },
             {
-                type: 'separator'
+                type: 'separator',
             },
             {
                 label: 'Cut',
                 accelerator: 'CmdOrCtrl+X',
-                role: 'cut'
+                role: 'cut',
             },
             {
                 label: 'Copy',
                 accelerator: 'CmdOrCtrl+C',
-                role: 'copy'
+                role: 'copy',
             },
             {
                 label: 'Paste',
                 accelerator: 'CmdOrCtrl+V',
-                role: 'paste'
+                role: 'paste',
             },
             {
                 label: 'Select All',
                 accelerator: 'CmdOrCtrl+A',
-                role: 'selectall'
-            }
-        ]
+                role: 'selectall',
+            },
+        ],
     },
     {
         label: 'View',
@@ -64,34 +63,53 @@ var defaultMenu = [
                 label: 'Reload',
                 accelerator: 'CmdOrCtrl+R',
                 click: function (item, focusedWindow) {
-                    if (focusedWindow)
-                        focusedWindow.reload();
-                }
+                    if (focusedWindow) focusedWindow.reload();
+                },
             },
             {
                 label: 'Toggle Developer Tools',
                 accelerator: (function () {
-                    if (process.platform === 'darwin')
-                        return 'Alt+Command+I';
-                    else
-                        return 'Ctrl+Shift+I';
+                    if (process.platform === 'darwin') return 'Alt+Command+I';
+                    else return 'Ctrl+Shift+I';
                 })(),
                 click: function (item, focusedWindow) {
-                    if (focusedWindow)
-                        focusedWindow.toggleDevTools();
-                }
+                    if (focusedWindow) focusedWindow.toggleDevTools();
+                },
             },
             {
                 label: 'Quit',
                 accelerator: 'Command+Q',
                 click: function () {
                     mb && mb.app && mb.app.quit();
-                }
-            }
-        ]
-    }
+                },
+            },
+        ],
+    },
 ];
 
+var globalShortcut = electron.globalShortcut;
+
+var registerGlobalShortcuts = function (mb) {
+    var shortcutsHandler = function (accelerator) {
+        mb.window.webContents.send('global-shortcut', { accelerator: accelerator });
+    };
+
+    for (var i = 0; i < accelerators.length; i++) {
+        var a = accelerators[i];
+        if (!globalShortcut.isRegistered(a.accelerator)) {
+            globalShortcut.register(a.accelerator, shortcutsHandler.bind(globalShortcut, a.accelerator));
+        }
+    }
+};
+
+var unregisterShortcuts = function () {
+    for (var i = 0; i < accelerators.length; i++) {
+        var a = accelerators[i];
+        if (globalShortcut.isRegistered(a.accelerator) && a.unregisterOnHide) {
+            globalShortcut.unregister(a.accelerator);
+        }
+    }
+};
 
 mb.on('ready', function ready() {
     console.info('Main process is ready, continue...');
@@ -109,27 +127,13 @@ mb.on('ready', function ready() {
     if (!process.env.npm_config_debug) {
         mb.app.dock.hide();
     }
-
-    var globalShortcut = electron.globalShortcut;
-
-    var registerGlobalShortcuts = function () {
-        var shortcutsHandler = function (accelerator) {
-            mb.window.webContents.send('global-shortcut', { accelerator: accelerator });
-        };
-
-        for (var i = 0; i < accelerators.length; i++) {
-            var a = accelerators[i];
-            if (!globalShortcut.isRegistered(a)) {
-                globalShortcut.register(a, shortcutsHandler.bind(globalShortcut, a));
-            }
-        }
-    };
-
     var toggleWindow = function () {
         if (mb.window.isVisible()) {
             mb.hideWindow();
+            unregisterShortcuts();
         } else {
             mb.showWindow();
+            registerGlobalShortcuts(mb);
         }
     };
 
@@ -151,7 +155,11 @@ mb.on('ready', function ready() {
 
     mb.tray.on('right-click', toggleWindow);
 
-    registerGlobalShortcuts();
+    mb.on('focus-lost', unregisterShortcuts);
+
+    mb.window.on('focus', () => registerGlobalShortcuts.call(null, mb));
+
+    registerGlobalShortcuts(mb);
 });
 
 mb.on('after-create-window', function () {
@@ -162,7 +170,7 @@ mb.on('after-create-window', function () {
 var bounds;
 mb.on('after-show', function () {
     /* Skip first show */
-    if (typeof bounds !== "undefined") {
+    if (typeof bounds !== 'undefined') {
         mb.window.setBounds(bounds);
     } else {
         if (config.rememberBounds && typeof config.bounds !== 'undefined') {
@@ -175,6 +183,8 @@ mb.on('after-show', function () {
     } else {
         mb.tray.setHighlightMode('never');
     }
+
+    registerGlobalShortcuts(mb);
 });
 
 mb.on('after-hide', function () {

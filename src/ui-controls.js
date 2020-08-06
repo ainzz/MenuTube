@@ -5,45 +5,51 @@ var BrowserWindow = remote.BrowserWindow;
 var app = remote.app;
 var shell = remote.shell;
 var ipcRenderer = require('electron').ipcRenderer;
+var Config = require('electron-config');
 
 var AppConfig = require('./../config.js');
-var config = AppConfig.store;
+var config = new Config();
 
 var urlHandler = require('./urlHandler.js');
 var wv = window.wv;
 
 var clickHandler = function (name, menu) {
     switch (name) {
-        case ('backButton'):
+        case 'backButton':
             if (wv.canGoBack()) {
                 wv.goBack();
             }
             break;
-        case ('refreshButton'):
+        case 'refreshButton':
             wv.reload();
             break;
-        case ('forwardButton'):
-            if (wv.canGoForward) {
+        case 'forwardButton':
+            if (wv.canGoForward()) {
                 wv.goForward();
             }
             break;
-        case ('preferenceButton'):
+        case 'likesButton':
+            wv.loadURL('https://www.youtube.com/playlist?list=LLty4aAueRnLtXTG6K74SGcg');
+            break;
+        case 'preferenceButton':
             menu.popup(remote.getCurrentWindow());
             break;
-        case ('PIPMode'):
-            document.body.classList.add("PIP-mode");
+        case 'PIPMode':
+            document.body.classList.add('PIP-mode');
             wv.send('enterPIPMode');
             break;
-        case ('PIPDragArea'):
-            document.body.classList.remove("PIP-mode");
+        case 'PIPDragArea':
+            document.body.classList.remove('PIP-mode');
             break;
-        case ('desktopModeButton'):
+        case 'desktopModeButton':
             /* Not the best way, but fine for now */
             var isActive = this.classList.contains('active');
             AppConfig.update({ desktopMode: !isActive });
-            if (typeof window !== 'undefined' &&
+            if (
+                typeof window !== 'undefined' &&
                 typeof window.location !== 'undefined' &&
-                typeof window.location.reload == 'function') {
+                typeof window.location.reload == 'function'
+            ) {
                 window.location.reload();
             }
             break;
@@ -59,10 +65,10 @@ var defaultMenuItems = [
             hideAndPause();
             shell.openExternal(urlHandler.getCurrentURL());
         },
-        role: 'help'
+        role: 'help',
     },
     {
-        type: 'separator'
+        type: 'separator',
     },
     {
         label: 'Preferences',
@@ -70,16 +76,16 @@ var defaultMenuItems = [
             var win = new BrowserWindow({
                 frame: true,
                 webPreferences: {
-                    nodeIntegration: true
-                }
+                    nodeIntegration: true,
+                },
             });
 
             hideAndPause();
             var path = app.getAppPath();
             win.loadURL('file://' + path + '/views/preferences.html');
-            win.show()
+            win.show();
         },
-        role: 'help'
+        role: 'help',
     },
     {
         label: dynamicLabel,
@@ -87,22 +93,24 @@ var defaultMenuItems = [
             hideAndPause();
             shell.openExternal('https://github.com/edanchenkov/MenuTube/releases');
         },
-        role: 'help'
+        role: 'help',
     },
     {
-        type: 'separator'
+        type: 'separator',
     },
     {
         label: 'Reload',
         click: function () {
-            if (typeof window !== 'undefined' &&
+            if (
+                typeof window !== 'undefined' &&
                 typeof window.location !== 'undefined' &&
-                typeof window.location.reload == 'function') {
+                typeof window.location.reload == 'function'
+            ) {
                 window.location.reload();
             }
         },
         role: 'help',
-        accelerator: 'Cmd+R'
+        accelerator: 'Cmd+R',
     },
     {
         label: 'Quit',
@@ -110,8 +118,8 @@ var defaultMenuItems = [
             app.quit();
         },
         role: 'help',
-        accelerator: 'Cmd+Q'
-    }
+        accelerator: 'Cmd+Q',
+    },
 ];
 
 var hideAndPause = function () {
@@ -120,24 +128,22 @@ var hideAndPause = function () {
 };
 
 var buildMenu = function (menu, menuItems) {
-
     menu.clear();
 
     for (var i = 0; i < menuItems.length; i++) {
         var mi = menuItems[i];
-        menu.append(new MenuItem(
-            {
+        menu.append(
+            new MenuItem({
                 label: mi.label,
                 click: mi.click,
                 type: mi.type,
                 role: mi.role,
                 accelerator: mi.accelerator,
-                submenu: mi.submenu
+                submenu: mi.submenu,
             })
         );
     }
 };
-
 
 /*
  *   This should not be here, but lets make it simple for now
@@ -145,7 +151,6 @@ var buildMenu = function (menu, menuItems) {
  * */
 var attempts = 5;
 var checkForUpdate = function (menu, controls) {
-
     var fetch = window.fetch;
 
     if (typeof fetch !== 'function') {
@@ -159,7 +164,6 @@ var checkForUpdate = function (menu, controls) {
                 if (typeof res !== 'undefined' && typeof res.json === 'function') {
                     res.json().then(function (data) {
                         if (typeof data !== 'undefined' && data.hasOwnProperty('tag_name')) {
-
                             if (data.tag_name !== remote.app.getVersion()) {
                                 var menuItems = defaultMenuItems.map(function (mi) {
                                     /*
@@ -186,9 +190,7 @@ var checkForUpdate = function (menu, controls) {
     }
 };
 
-
 exports.init = function (wv, controls) {
-
     var menu = new Menu();
     buildMenu(menu, defaultMenuItems);
     checkForUpdate(menu, controls);
@@ -199,12 +201,12 @@ exports.init = function (wv, controls) {
             if (el && typeof el.addEventListener === 'function') {
                 var event = 'click';
 
-                if (el.classList.contains("PIP-drag-area")) {
+                if (el.classList.contains('PIP-drag-area')) {
                     event = 'dblclick';
                 }
 
                 if (c === 'desktopModeButton') {
-                    if (config.userPreferences.desktopMode) {
+                    if (config.get('desktopMode')) {
                         el.classList.add('active');
                     } else {
                         el.classList.remove('active');

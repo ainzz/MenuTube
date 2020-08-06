@@ -1,5 +1,4 @@
 exports.continueInit = function (wv, controls) {
-
     console.info('Main process is initialised and seems to work');
 
     var AppConfig = require('./../config.js');
@@ -28,7 +27,7 @@ exports.continueInit = function (wv, controls) {
     }
 
     if (config.userPreferences.PIPModeByDefault) {
-        document.body.classList.add("PIP-mode");
+        document.body.classList.add('PIP-mode');
     }
 
     if (typeof wv !== 'undefined' && typeof wv.loadURL === 'function') {
@@ -43,8 +42,8 @@ exports.continueInit = function (wv, controls) {
         }
 
         /* This all is not the best approach for handling loading state,
-        *   but it is enough for now
-        * */
+         *   but it is enough for now
+         * */
         var ts = Date.now();
         var splashScreen = document.querySelector('.splash-screen');
         var hideSplashScreen = function () {

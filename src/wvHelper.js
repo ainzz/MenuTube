@@ -29,12 +29,12 @@ document.addEventListener = () => {
                     obj.addEventListener('DOMNodeInserted', callback, false);
                     obj.addEventListener('DOMNodeRemoved', callback, false);
                 }
-            }
+            };
         })();
 
         _newListener('DOMContentLoaded', () => {
             observeDOM(document.body, function (m) {
-                const _check = v => v !== null && v !== undefined;
+                const _check = (v) => v !== null && v !== undefined;
                 const ad = [...document.querySelectorAll('.ad-showing')][0];
                 if (_check(ad)) {
                     const video = document.querySelector('video');
@@ -44,7 +44,6 @@ document.addEventListener = () => {
                 }
             });
         });
-
     }
 
     var ipcRenderer = require('electron').ipcRenderer;
@@ -52,14 +51,17 @@ document.addEventListener = () => {
 
     var setStream = function (video) {
         var id = video.id.replace('player_', '');
-        var stream = '<iframe src="https://www.youtube.com/embed/' + id + '" style="width: 100%; height: 100%;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+        var stream =
+            '<iframe src="https://www.youtube.com/embed/' +
+            id +
+            '" style="width: 100%; height: 100%;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
         document.body.innerHTML = stream;
     };
 
     ipcRenderer.on('playPause', function () {
         var video = document.querySelector('video');
 
-        if (typeof video === 'undefined' || video === null) {
+        if (video == null) {
             return;
         }
 
@@ -68,37 +70,38 @@ document.addEventListener = () => {
         } else {
             video.pause();
         }
-
     });
 
     ipcRenderer.on('pause', function () {
         var video = document.querySelector('video');
 
-        if (typeof video === 'undefined' || video === null) {
+        if (video == null) {
             return;
         }
 
         if (!video.paused) {
             video.pause();
         }
-
     });
 
     ipcRenderer.on('changeTime', function (event, time) {
         var video = document.querySelector('video');
 
-        if (typeof video === 'undefined' || video === null) {
+        if (video == null) {
             return;
         }
 
         video.currentTime += time;
+    });
 
+    ipcRenderer.on('gotolikes', function (event) {
+        window.location.href = 'https://www.youtube.com/playlist?list=LLty4aAueRnLtXTG6K74SGcg';
     });
 
     ipcRenderer.on('enterPIPMode', function _retry() {
         var video = document.querySelector('video');
 
-        if (typeof video === 'undefined' || video === null) {
+        if (video == null) {
             if (attempts > 0) {
                 setTimeout(_retry, 100);
                 attempts--;
@@ -108,9 +111,9 @@ document.addEventListener = () => {
             return;
         }
 
-        if (typeof video !== "undefined") {
+        if (typeof video !== 'undefined') {
             document.body.innerHTML = '';
-            document.body.style.backgroundColor = "black";
+            document.body.style.backgroundColor = 'black';
             document.body.className = '';
             video.style.width = '100%';
             video.style.height = '100%';
@@ -130,7 +133,7 @@ document.addEventListener = () => {
     ipcRenderer.on('onDidNavigateVideoPage', function _retry(event, url) {
         var video = document.querySelector('video');
 
-        if (typeof video === 'undefined' || video === null) {
+        if (video == null) {
             if (attempts > 0) {
                 setTimeout(_retry, 100);
                 attempts--;
@@ -140,7 +143,7 @@ document.addEventListener = () => {
             return;
         }
 
-        if (typeof video === 'undefined') {
+        if (video == null) {
             return;
         }
 
@@ -148,5 +151,4 @@ document.addEventListener = () => {
             setStream(video);
         }
     });
-
-}());
+})();

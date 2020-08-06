@@ -68,6 +68,10 @@
                 text-align: center;
             }
 
+			#likes-btn {
+				margin-right: 0.75rem;
+			}
+
             #desktop-mode-btn {
                 margin-left: 0.75rem;
             }
@@ -224,7 +228,13 @@
                                aria-hidden="true"></i>
                         </span>
                         </a>
-                    </p>
+					</p>
+					<a id="likes-btn" class="button">
+                        <span class="icon is-small">
+                            <i class="fa fa-thumbs-up"
+                               aria-hidden="true"></i>
+                        </span>
+                    </a>
                     <a id="PIP-btn" class="button">
                         <span class="icon is-small">
                             <i class="fa fa-chevron-up"
@@ -268,7 +278,8 @@
                         var controls = {
                             backButton: document.getElementById('back-btn'),
                             refreshButton: document.getElementById('refresh-btn'),
-                            forwardButton: document.getElementById('forward-btn'),
+							forwardButton: document.getElementById('forward-btn'),
+							likesButton: document.getElementById('likes-btn'),
                             preferenceButton: document.getElementById('pref-btn'),
                             PIPMode: document.getElementById('PIP-btn'),
                             PIPDragArea: document.querySelector('.PIP-drag-area'),
@@ -280,43 +291,6 @@
                         app.continueInit(wv, controls);
                     }
                 });
-
-
-                setTimeout(function () {
-                    (function (i, s, o, g, r, a, m) {
-                        i['GoogleAnalyticsObject'] = r;
-                        i[r] = i[r] || function () {
-                            (i[r].q = i[r].q || []).push(arguments)
-                        }, i[r].l = 1 * new Date();
-                        a = s.createElement(o),
-                            m = s.getElementsByTagName(o)[0];
-                        a.async = 1;
-                        a.src = g;
-                        m.parentNode.insertBefore(a, m)
-                    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-                    (function () {
-                        'use strict';
-                        var ElectronCookies = require('@exponent/electron-cookies');
-                        ElectronCookies.enable({ origin: 'https://MenuTube.electron.app.local.com' });
-
-                        ga('create', 'UA-92232645-1', 'auto');
-                        ga('set', 'location', 'https://MenuTube.electron.app.local.com/');
-                        ga('set', 'checkProtocolTask', null);
-                        ga('send', 'pageview');
-                        ga('set', 'appVersion', remote && remote.app && remote.app.getVersion());
-
-                        ga('send', {
-                            'hitType': 'event',
-                            'eventCategory': 'app',
-                            'eventAction': 'init',
-                            'eventLabel': remote && remote.app && remote.app.getVersion(),
-                            // 'hitCallback': function () {
-                            //     alert("Event received");
-                            // }
-                        });
-                    })();
-                }, 500)
             }
         </script>
 

@@ -10,3 +10,6 @@ docs/_site
 builds/
 dist
 entitlements
+.prettierrc
+.DS_Store
+package-lock.json
