@@ -128,12 +128,28 @@ mb.on('ready', function ready() {
         mb.app.dock.hide();
     }
     var toggleWindow = function () {
+        var windowPosition = mb.window.getPosition();
+        var { x, y } = screen.getCursorScreenPoint();
+        var displays = screen.getAllDisplays();
+        var currentDisplay = screen.getDisplayNearestPoint({ x, y });
+
+        var windowDisplay = displays.find(function (display) {
+            return (
+                +display.workArea.x + +display.workAreaSize.width >= windowPosition[0] &&
+                windowPosition[0] > display.workArea.x
+            );
+        });
+
+        if (currentDisplay.id != windowDisplay.id && mb.window.isVisible()) {
+            mb.window.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
+            mb.window.center();
+            return false;
+        }
+
         if (mb.window.isVisible()) {
             mb.hideWindow();
             unregisterShortcuts();
         } else {
-            const { x, y } = screen.getCursorScreenPoint();
-            const currentDisplay = screen.getDisplayNearestPoint({ x, y });
             mb.showWindow();
             mb.window.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
             mb.window.center();
