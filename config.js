@@ -28,6 +28,7 @@ var userPreferences = {
     rememberBounds: true,
     theme: 'red-theme',
     desktopMode: true,
+    videoLoop: true,
     hotkeys: {
         toggle: 'F4',
         playPause: 'Space',
@@ -36,6 +37,7 @@ var userPreferences = {
         skipLongFwd: 'Cmd+Ctrl+Right',
         skipLongBwd: 'Cmd+Ctrl+Left',
     },
+    likesPlaylist: 'LLty4aAueRnLtXTG6K74SGcg',
 };
 
 var defaults = {

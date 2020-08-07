@@ -1,9 +1,11 @@
+var Config = require('electron-config');
 var urlHandler = {};
 var AppConfig = require('./../config.js');
 var config = AppConfig.store;
+var electronConfig = new Config();
 
 module.exports = {
-    init : function (wv) {
+    init: function (wv) {
         var remote = require('electron').remote;
         var shell = remote.shell;
 
@@ -20,6 +22,11 @@ module.exports = {
 
         wv.addEventListener('did-navigate-in-page', function (e) {
             urlHandler.currentURL = e.url;
+            setTimeout(function () {
+                var videoLoop = electronConfig.get('videoLoop');
+
+                wv.send('setVideoLoop', videoLoop);
+            }, 500);
 
             if (that.isVideoURL(e.url)) {
                 urlHandler.videoHistory = urlHandler.videoHistory || [];
@@ -57,7 +64,7 @@ module.exports = {
 
         wv.addEventListener('will-navigate', function (e) {
             if (!that.isAllowedURL(e.url)) {
-                shell.openExternal(e.url)
+                shell.openExternal(e.url);
             }
         });
 
@@ -65,15 +72,13 @@ module.exports = {
          *                     END
          * */
     },
-    getCurrentURL : function () {
+    getCurrentURL: function () {
         return urlHandler.currentURL;
     },
-    isVideoURL : function (url) {
-        return url.indexOf('.youtube.com/') > -1 &&
-            url.indexOf('watch?v=') > -1;
+    isVideoURL: function (url) {
+        return url.indexOf('.youtube.com/') > -1 && url.indexOf('watch?v=') > -1;
     },
-    isAllowedURL : function (url) {
-        return (url.indexOf('.youtube.com/') > -1) ||
-            (url.indexOf('accounts.google.com') > -1);
-    }
+    isAllowedURL: function (url) {
+        return url.indexOf('.youtube.com/') > -1 || url.indexOf('accounts.google.com') > -1;
+    },
 };

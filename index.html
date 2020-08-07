@@ -1,14 +1,10 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
-
     <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>MenuTube</title>
-        <link rel="stylesheet" type="text/css"
-              href="node_modules/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css"
-              href="node_modules/bulma/css/bulma.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="node_modules/bulma/css/bulma.css" />
         <style>
             html {
                 overflow-y: auto;
@@ -68,9 +64,16 @@
                 text-align: center;
             }
 
-			#likes-btn {
-				margin-right: 0.75rem;
-			}
+            #likes-btn,
+            #loop-btn {
+                margin-right: 0.75rem;
+            }
+
+            #loop-btn.active {
+                background-color: rgb(255, 255, 255);
+				border-color: rgb(155, 155, 155);
+				color: black;
+            }
 
             #desktop-mode-btn {
                 margin-left: 0.75rem;
@@ -120,11 +123,11 @@
                 background-color: #ecf0f1;
                 top: 0;
                 opacity: 1;
-                transition: all .525s ease-out;
+                transition: all 0.525s ease-out;
             }
 
             .splash-screen:after {
-                content: "";
+                content: '';
                 background: url(./icons/logo-icon.png);
                 background-position: center center;
                 animation-duration: 2s;
@@ -199,48 +202,47 @@
                 border-color: #33414c;
                 color: #e1e5ff;
             }
-
         </style>
     </head>
 
     <body>
-        <div class="PIP-drag-area draggable"> Drag to move or double click to
-            exit PIP mode
-        </div>
+        <div class="PIP-drag-area draggable">Drag to move or double click to exit PIP mode</div>
         <div class="controls columns is-mobile">
             <div class="column is-three-quarters">
                 <div class="control is-grouped">
                     <p class="control has-addons is-9">
                         <a id="back-btn" class="button">
-                        <span class="icon is-small">
-                            <i class="fa fa-chevron-left"
-                               aria-hidden="true"></i>
-                        </span>
+                            <span class="icon is-small">
+                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            </span>
                         </a>
                         <a id="refresh-btn" class="button">
-                        <span class="icon is-small">
-                            <i class="fa fa-refresh" aria-hidden="true"></i>
-                        </span>
+                            <span class="icon is-small">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </span>
                         </a>
                         <a id="forward-btn" class="button">
-                        <span class="icon is-small">
-                            <i class="fa fa-chevron-right"
-                               aria-hidden="true"></i>
-                        </span>
+                            <span class="icon is-small">
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                            </span>
                         </a>
-					</p>
-					<a id="likes-btn" class="button">
+                    </p>
+                    <a id="loop-btn" class="button">
                         <span class="icon is-small">
-                            <i class="fa fa-thumbs-up"
-                               aria-hidden="true"></i>
+                            <i class="fa fa-spinner" aria-hidden="true"></i>
                         </span>
                     </a>
-                    <a id="PIP-btn" class="button">
+                    <a id="likes-btn" class="button">
+                        <span class="icon is-small">
+                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                    <!-- <a id="PIP-btn" class="button">
                         <span class="icon is-small">
                             <i class="fa fa-chevron-up"
                                aria-hidden="true"></i>
                         </span>
-                    </a>
+                    </a> -->
                     <a id="desktop-mode-btn" class="button">
                         <span class="icon is-small">
                             <i class="fa fa-desktop" aria-hidden="true"></i>
@@ -263,8 +265,7 @@
         <div class="splash-screen">
             <span id="app-version"></span>
         </div>
-        <webview src="about:blank" id="wv"
-                 preload="./src/wvHelper.js"></webview>
+        <webview src="about:blank" id="wv" preload="./src/wvHelper.js"></webview>
         <script>
             onload = function () {
                 var remote = require('electron').remote;
@@ -278,12 +279,13 @@
                         var controls = {
                             backButton: document.getElementById('back-btn'),
                             refreshButton: document.getElementById('refresh-btn'),
-							forwardButton: document.getElementById('forward-btn'),
-							likesButton: document.getElementById('likes-btn'),
+                            forwardButton: document.getElementById('forward-btn'),
+                            likesButton: document.getElementById('likes-btn'),
+                            loopButton: document.getElementById('loop-btn'),
                             preferenceButton: document.getElementById('pref-btn'),
-                            PIPMode: document.getElementById('PIP-btn'),
+                            // PIPMode: document.getElementById('PIP-btn'),
                             PIPDragArea: document.querySelector('.PIP-drag-area'),
-                            desktopModeButton: document.getElementById('desktop-mode-btn')
+                            desktopModeButton: document.getElementById('desktop-mode-btn'),
                         };
 
                         initialised = true;
@@ -291,9 +293,7 @@
                         app.continueInit(wv, controls);
                     }
                 });
-            }
+            };
         </script>
-
     </body>
-
 </html>

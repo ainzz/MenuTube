@@ -29,7 +29,20 @@ var clickHandler = function (name, menu) {
             }
             break;
         case 'likesButton':
-            wv.loadURL('https://www.youtube.com/playlist?list=LLty4aAueRnLtXTG6K74SGcg');
+            var playlistId = config.get('likesPlaylist');
+            if (playlistId) {
+                wv.loadURL(`https://www.youtube.com/playlist?list=${playlistId}`);
+            }
+            break;
+        case 'loopButton':
+            var isActive = this.classList.contains('active');
+            AppConfig.update({ videoLoop: !isActive });
+            wv.send('setVideoLoop', !isActive);
+            if (isActive) {
+                this.classList.remove('active');
+            } else {
+                this.classList.add('active');
+            }
             break;
         case 'preferenceButton':
             menu.popup(remote.getCurrentWindow());
@@ -207,6 +220,14 @@ exports.init = function (wv, controls) {
 
                 if (c === 'desktopModeButton') {
                     if (config.get('desktopMode')) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+
+                if (c === 'loopButton') {
+                    if (config.get('videoLoop')) {
                         el.classList.add('active');
                     } else {
                         el.classList.remove('active');

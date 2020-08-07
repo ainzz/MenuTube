@@ -98,6 +98,16 @@ document.addEventListener = () => {
         window.location.href = 'https://www.youtube.com/playlist?list=LLty4aAueRnLtXTG6K74SGcg';
     });
 
+    ipcRenderer.on('setVideoLoop', function (event, status) {
+        var video = document.querySelector('video');
+
+        if (video == null) {
+            return;
+        }
+
+        video.loop = status;
+    });
+
     ipcRenderer.on('enterPIPMode', function _retry() {
         var video = document.querySelector('video');
 
