@@ -1,5 +1,5 @@
 var electron = require('electron');
-
+var { screen } = require('electron');
 const { menubar } = require('menubar');
 var ipcMain = require('electron').ipcMain;
 
@@ -132,7 +132,11 @@ mb.on('ready', function ready() {
             mb.hideWindow();
             unregisterShortcuts();
         } else {
+            const { x, y } = screen.getCursorScreenPoint();
+            const currentDisplay = screen.getDisplayNearestPoint({ x, y });
             mb.showWindow();
+            mb.window.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
+            mb.window.center();
             registerGlobalShortcuts(mb);
         }
     };
