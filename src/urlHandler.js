@@ -24,8 +24,10 @@ module.exports = {
             urlHandler.currentURL = e.url;
             setTimeout(function () {
                 var videoLoop = electronConfig.get('videoLoop');
-
                 wv.send('setVideoLoop', videoLoop);
+
+                var disableOverlay = electronConfig.get('disableVideoOverlay');
+                wv.send('setOverlay', disableOverlay);
             }, 500);
 
             if (that.isVideoURL(e.url)) {

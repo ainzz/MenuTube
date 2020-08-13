@@ -5,6 +5,41 @@ document.addEventListener = () => {
     _newListener.apply(document, arguments);
 };
 
+function CCSStylesheetRuleStyle(stylesheet, selectorText, style, value) {
+    /* returns the value of the element style of the rule in the stylesheet
+     *  If no value is given, reads the value
+     *  If value is given, the value is changed and returned
+     *  If '' (empty string) is given, erases the value.
+     *  The browser will apply the default one
+     *
+     * string stylesheet: part of the .css name to be recognized, e.g. 'default'
+     * string selectorText: css selector, e.g. '#myId', '.myClass', 'thead td'
+     * string style: camelCase element style, e.g. 'fontSize'
+     * string value optionnal : the new value
+     */
+    var CCSstyle = undefined,
+        rules;
+    for (var ssheet of document.styleSheets) {
+        if (
+            ssheet.href != null &&
+            (Array.isArray(stylesheet)
+                ? stylesheet.some((s) => ssheet.href.indexOf(s) != -1)
+                : ssheet.href.indexOf(stylesheet) != -1)
+        ) {
+            rules = ssheet[document.all ? 'rules' : 'cssRules'];
+            for (var n in rules) {
+                if (rules[n].selectorText == selectorText) {
+                    CCSstyle = rules[n].style;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    if (value == undefined) return CCSstyle[style];
+    else return (CCSstyle[style] = value);
+}
+
 (function () {
     var AppConfig = require('./../config.js');
     var config = AppConfig.store.userPreferences;
@@ -106,6 +141,21 @@ document.addEventListener = () => {
         }
 
         video.loop = status;
+    });
+
+    ipcRenderer.on('setOverlay', function (event, status) {
+        var transparent = 'rgb(0 0 0 / 0%)';
+        var original = 'rgba(0,0,0,0.6)';
+
+        var overlay = document.querySelector('#player-control-overlay');
+        if (!overlay) return false;
+
+        CCSStylesheetRuleStyle(
+            ['cssbin', 'ytmweb'],
+            '#player-control-overlay.fadein',
+            'background-color',
+            status ? transparent : original
+        );
     });
 
     ipcRenderer.on('enterPIPMode', function _retry() {

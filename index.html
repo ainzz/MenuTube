@@ -69,10 +69,11 @@
                 margin-right: 0.75rem;
             }
 
-            #loop-btn.active {
+            #loop-btn.active,
+            #overlay-btn.active {
                 background-color: rgb(255, 255, 255);
-				border-color: rgb(155, 155, 155);
-				color: black;
+                border-color: rgb(155, 155, 155);
+                color: black;
             }
 
             #desktop-mode-btn {
@@ -227,6 +228,11 @@
                             </span>
                         </a>
                     </p>
+                    <a id="overlay-btn" class="button">
+                        <span class="icon is-small">
+                            <i class="fa fa-clone" aria-hidden="true"></i>
+                        </span>
+                    </a>
                     <a id="loop-btn" class="button">
                         <span class="icon is-small">
                             <i class="fa fa-spinner" aria-hidden="true"></i>
@@ -282,6 +288,7 @@
                             forwardButton: document.getElementById('forward-btn'),
                             likesButton: document.getElementById('likes-btn'),
                             loopButton: document.getElementById('loop-btn'),
+                            overlayButton: document.getElementById('overlay-btn'),
                             preferenceButton: document.getElementById('pref-btn'),
                             // PIPMode: document.getElementById('PIP-btn'),
                             PIPDragArea: document.querySelector('.PIP-drag-area'),

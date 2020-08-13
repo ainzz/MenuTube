@@ -29,6 +29,7 @@ var userPreferences = {
     theme: 'red-theme',
     desktopMode: true,
     videoLoop: true,
+    disableVideoOverlay: false,
     hotkeys: {
         toggle: 'F4',
         playPause: 'Space',

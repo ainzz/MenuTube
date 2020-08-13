@@ -140,9 +140,10 @@ mb.on('ready', function ready() {
             );
         });
 
-        if (currentDisplay.id != windowDisplay.id && mb.window.isVisible()) {
+        if (currentDisplay && windowDisplay && currentDisplay.id != windowDisplay.id && mb.window.isVisible()) {
             mb.window.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
             mb.window.center();
+            mb.window.focus();
             return false;
         }
 
@@ -153,6 +154,7 @@ mb.on('ready', function ready() {
             mb.showWindow();
             mb.window.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
             mb.window.center();
+            mb.window.focus();
             registerGlobalShortcuts(mb);
         }
     };

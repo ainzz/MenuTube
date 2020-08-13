@@ -44,6 +44,16 @@ var clickHandler = function (name, menu) {
                 this.classList.add('active');
             }
             break;
+        case 'overlayButton':
+            var isActive = this.classList.contains('active');
+            AppConfig.update({ disableVideoOverlay: !isActive });
+            wv.send('setOverlay', !isActive);
+            if (isActive) {
+                this.classList.remove('active');
+            } else {
+                this.classList.add('active');
+            }
+            break;
         case 'preferenceButton':
             menu.popup(remote.getCurrentWindow());
             break;
@@ -228,6 +238,14 @@ exports.init = function (wv, controls) {
 
                 if (c === 'loopButton') {
                     if (config.get('videoLoop')) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+
+                if (c === 'overlayButton') {
+                    if (config.get('disableVideoOverlay')) {
                         el.classList.add('active');
                     } else {
                         el.classList.remove('active');
