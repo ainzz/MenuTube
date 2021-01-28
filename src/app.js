@@ -63,7 +63,7 @@ exports.continueInit = function (wv, controls) {
             }
 
             /* DEBUG wvHelper */
-            wv.openDevTools();
+            // wv.openDevTools();
         });
 
         wv.loadURL('https://m.youtube.com/', options).then(() => {
