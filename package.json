@@ -38,14 +38,15 @@
     "dependencies": {
         "@exponent/electron-cookies": "^2.0.0",
         "bulma": "^0.3.2",
-        "electron-config": "^0.2.1",
+        "electron-config": "2.0.0",
         "font-awesome": "^4.7.0",
-        "menubar": "^9.0.1"
+        "menubar": "9.0.2"
     },
     "devDependencies": {
-        "electron": "^9.0.3",
-        "electron-builder": "^22.4.1",
-        "electron-packager": "^14.2.1",
+        "electron": "11.2.1",
+        "electron-builder": "22.9.1",
+        "electron-packager": "15.2.0",
+        "electron-reloader": "^1.2.0",
         "jshint": "^2.9.5"
     }
 }

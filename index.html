@@ -274,7 +274,7 @@
         <webview src="about:blank" id="wv" preload="./src/wvHelper.js"></webview>
         <script>
             onload = function () {
-                var remote = require('electron').remote;
+				var remote = require('electron').remote;
                 document.getElementById('app-version').innerText = 'MenuTube v.' + remote.app.getVersion();
 
                 // Get webview

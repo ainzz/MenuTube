@@ -42,9 +42,9 @@ var userPreferences = {
 };
 
 var defaults = {
-    showOnRightClick: false,
+    showOnRightClick: true,
     userAgent:
-        'MMozilla/5.0 (Linux; Android 9; SM-G960F Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36',
+        'Mozilla/5.0 (Linux; Android 7.1.2; DSCS9 Build/NHG47L; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.149 Safari/537.36',
     desktopUserAgent:
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
     externalLinks: false,
@@ -59,6 +59,7 @@ var defaults = {
         webPreferences: {
             nodeIntegration: true,
             webviewTag: true,
+            enableRemoteModule: true,
         },
     },
 };

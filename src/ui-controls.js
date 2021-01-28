@@ -31,7 +31,7 @@ var clickHandler = function (name, menu) {
         case 'likesButton':
             var playlistId = config.get('likesPlaylist');
             if (playlistId) {
-                wv.loadURL(`https://www.youtube.com/playlist?list=${playlistId}`);
+                wv.loadURL(`https://m.youtube.com/playlist?list=${playlistId}`);
             }
             break;
         case 'loopButton':
@@ -193,7 +193,7 @@ var checkForUpdate = function (menu, controls) {
                                      *   Should check against something else probably, not label
                                      * */
                                     if (mi.label === dynamicLabel) {
-                                        mi.label = '(!) NEW VERSION IS AVAILABLE';
+                                        // mi.label = '(!) NEW VERSION IS AVAILABLE';
                                     }
                                     return mi;
                                 });
@@ -216,7 +216,9 @@ var checkForUpdate = function (menu, controls) {
 exports.init = function (wv, controls) {
     var menu = new Menu();
     buildMenu(menu, defaultMenuItems);
-    checkForUpdate(menu, controls);
+
+    // Don't need update for now
+    // checkForUpdate(menu, controls);
 
     for (var c in controls) {
         if (controls.hasOwnProperty(c)) {

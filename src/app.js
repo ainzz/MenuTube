@@ -63,10 +63,10 @@ exports.continueInit = function (wv, controls) {
             }
 
             /* DEBUG wvHelper */
-            // wv.openDevTools();
+            wv.openDevTools();
         });
 
-        wv.loadURL('https://www.youtube.com/', options).then(() => {
+        wv.loadURL('https://m.youtube.com/', options).then(() => {
             urlHandler.init(wv);
             globalShortcuts.init(wv);
             uiControls.init(wv, controls);
