@@ -1,6 +1,6 @@
 {
     "name": "MenuTube",
-    "version": "1.7.5",
+    "version": "1.7.6",
     "description": "Catch YouTube into your macOS menu bar!",
     "main": "main.js",
     "scripts": {
